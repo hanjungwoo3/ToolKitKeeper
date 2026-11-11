@@ -1,0 +1,33 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.questhelper.tkkeeper'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'com.questhelper.tkkeeper'
+        minSdk 29
+        targetSdk 33
+        versionCode 1
+        versionName '1.0'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    // Pure-JVM ADB client: lets the app talk to the headset's own adbd on 127.0.0.1:5555
+    implementation 'dev.mobile:dadb:1.2.10'
+}
