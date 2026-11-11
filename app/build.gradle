@@ -10,14 +10,28 @@ android {
         applicationId 'com.questhelper.tkkeeper'
         minSdk 29
         targetSdk 33
-        versionCode 1
-        versionName '1.0'
+        // CI passes the run number / tag so every build can be installed over the previous one
+        versionCode((System.getenv('VERSION_CODE') ?: '1') as int)
+        versionName System.getenv('VERSION_NAME') ?: '1.0'
+    }
+
+    signingConfigs {
+        // CI: keystore decoded from the KEYSTORE_BASE64 secret. Local: falls back to the debug key.
+        release {
+            def ks = System.getenv('KEYSTORE_FILE')
+            if (ks) {
+                storeFile file(ks)
+                storePassword System.getenv('KEYSTORE_PASSWORD')
+                keyAlias System.getenv('KEY_ALIAS')
+                keyPassword System.getenv('KEY_PASSWORD')
+            }
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
-            signingConfig signingConfigs.debug
+            signingConfig System.getenv('KEYSTORE_FILE') ? signingConfigs.release : signingConfigs.debug
         }
     }
 
